@@ -16,6 +16,8 @@ Este proyecto implementa una aplicación web full-stack que consume una API REST
 - **Comunicación**: Fetch API para consumir endpoints REST
 
 
+<img width="1307" height="578" alt="image" src="https://github.com/user-attachments/assets/b7ed0983-de40-42e2-a84c-09f7a8fffd48" />
+
 
 
 
