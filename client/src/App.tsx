@@ -282,223 +282,239 @@ function App() {
         <p className={`feedback feedback--${feedback.type}`}>{feedback.message}</p>
       )}
 
-      {activeTab === 'games' && (
-        <div>
-          <section className="panel">
-            <h2 className="panel__title">Agregar nuevo juego</h2>
-            <form className="form" onSubmit={handleCreateGame}>
-              <label className="form-field">
-                <span>Nombre</span>
-                <input
-                  type="text"
-                  value={gameForm.name}
-                  onChange={(e) => setGameForm(prev => ({ ...prev, name: e.target.value }))}
-                  required
-                />
-              </label>
-              <label className="form-field">
-                <span>Descripción</span>
-                <textarea
-                  value={gameForm.description}
-                  onChange={(e) => setGameForm(prev => ({ ...prev, description: e.target.value }))}
-                />
-              </label>
-              <button className="btn btn--primary" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Creando…' : 'Crear juego'}
-              </button>
-            </form>
-          </section>
-
-          <section className="panel">
-            <h2 className="panel__title">Juegos disponibles</h2>
-            <ul className="list">
-              {games.map(game => (
-                <li key={game.id} className="list-item">
-                  <h3>{game.name}</h3>
-                  {game.description && <p>{game.description}</p>}
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-      )}
-
-      {activeTab === 'items' && (
-        <div>
-          <section className="panel">
-            <h2 className="panel__title">Agregar nuevo item</h2>
-            <form className="form" onSubmit={handleCreateItem}>
-              <label className="form-field">
-                <span>Nombre</span>
-                <input
-                  type="text"
-                  value={itemForm.name}
-                  onChange={(e) => setItemForm(prev => ({ ...prev, name: e.target.value }))}
-                  required
-                />
-              </label>
-              <label className="form-field">
-                <span>Descripción</span>
-                <textarea
-                  value={itemForm.description}
-                  onChange={(e) => setItemForm(prev => ({ ...prev, description: e.target.value }))}
-                />
-              </label>
-              <label className="form-field">
-                <span>URL de imagen</span>
-                <input
-                  type="url"
-                  value={itemForm.imageUrl}
-                  onChange={(e) => setItemForm(prev => ({ ...prev, imageUrl: e.target.value }))}
-                />
-              </label>
-              <button className="btn btn--primary" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Creando…' : 'Crear item'}
-              </button>
-            </form>
-          </section>
-
-          <section className="panel">
-            <h2 className="panel__title">Items disponibles</h2>
-            <ul className="list">
-              {items.map(item => (
-                <li key={item.id} className="list-item">
-                  <h3>{item.name}</h3>
-                  {item.description && <p>{item.description}</p>}
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-      )}
-
-      {activeTab === 'tierlists' && (
-        <div>
-          <section className="panel">
-            <h2 className="panel__title">Crear nueva tier list</h2>
-            <form className="form" onSubmit={handleCreateTierList}>
-              <label className="form-field">
-                <span>Título</span>
-                <input
-                  type="text"
-                  value={tierListForm.title}
-                  onChange={(e) => setTierListForm(prev => ({ ...prev, title: e.target.value }))}
-                  required
-                />
-              </label>
-              <label className="form-field">
-                <span>Descripción</span>
-                <textarea
-                  value={tierListForm.description}
-                  onChange={(e) => setTierListForm(prev => ({ ...prev, description: e.target.value }))}
-                />
-              </label>
-              <label className="form-field">
-                <span>Juego</span>
-                <select
-                  value={tierListForm.gameId}
-                  onChange={(e) => setTierListForm(prev => ({ ...prev, gameId: e.target.value }))}
-                  required
-                >
-                  <option value="">Seleccionar juego</option>
-                  {games.map(game => (
-                    <option key={game.id} value={game.id}>{game.name}</option>
-                  ))}
-                </select>
-              </label>
-              <button className="btn btn--primary" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Creando…' : 'Crear tier list'}
-              </button>
-            </form>
-          </section>
-
-          <section className="panel">
-            <h2 className="panel__title">Tier Lists disponibles</h2>
-            <ul className="list">
-              {tierLists.map(tierList => (
-                <li key={tierList.id} className="list-item">
-                  <h3>{tierList.title}</h3>
-                  {tierList.description && <p>{tierList.description}</p>}
-                  <button
-                    className="btn btn--secondary"
-                    onClick={() => selectTierList(tierList)}
-                  >
-                    Ver tier list
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          {selectedTierList && (
+      <div className="app__content">
+        {activeTab === 'games' && (
+          <div className="content-grid">
             <section className="panel">
-              <h2 className="panel__title">{selectedTierList.title}</h2>
-              <section className="panel">
-                <h3>Agregar item a esta tier list</h3>
-                <form className="form" onSubmit={handleAddItemToTierList}>
-                  <label className="form-field">
-                    <span>Seleccionar item</span>
-                    <select
-                      value={addItemForm.itemId}
-                      onChange={(e) => setAddItemForm(prev => ({ ...prev, itemId: e.target.value }))}
-                      required
-                    >
-                      <option value="">Seleccionar item</option>
-                      {items.map(item => (
-                        <option key={item.id} value={item.id}>{item.name}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="form-field">
-                    <span>Rank</span>
-                    <select
-                      value={addItemForm.rank}
-                      onChange={(e) => setAddItemForm(prev => ({ ...prev, rank: e.target.value as TierRank }))}
-                      required
-                    >
-                      {RANK_ORDER.map(rank => (
-                        <option key={rank} value={rank}>{rank}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <button className="btn btn--primary" type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? 'Agregando…' : 'Agregar item'}
-                  </button>
-                </form>
-              </section>
-              {status === 'loading' && <p className="status status--loading">Cargando...</p>}
-              {status === 'error' && error && (
-                <p className="status status--error">Error: {error}</p>
-              )}
-              {status === 'success' && (
-                <div className="tier-grid">
-                  {groupedTierListItems.map(({ rank, items: rankItems }) => (
-                    <article key={rank} className="tier-column">
-                      <div className={`tier-header rank-${rank}`}>{rank}</div>
-                      <ul className="tier-items">
-                        {rankItems.length === 0 ? (
-                          <li className="tier-item tier-item--empty">Sin elementos en esta categoría.</li>
-                        ) : (
-                          rankItems.map((tierListItem) => (
-                            <li key={tierListItem.id} className="tier-item">
-                              <div>
-                                <h3 className="tier-item__name">{tierListItem.item?.name}</h3>
-                                {tierListItem.item?.description && (
-                                  <p className="tier-item__description">{tierListItem.item.description}</p>
-                                )}
-                              </div>
-                            </li>
-                          ))
-                        )}
-                      </ul>
-                    </article>
-                  ))}
-                </div>
-              )}
+              <h2 className="panel__title">Agregar nuevo juego</h2>
+              <form className="form" onSubmit={handleCreateGame}>
+                <label className="form-field">
+                  <span>Nombre</span>
+                  <input
+                    type="text"
+                    value={gameForm.name}
+                    onChange={(e) => setGameForm(prev => ({ ...prev, name: e.target.value }))}
+                    required
+                  />
+                </label>
+                <label className="form-field">
+                  <span>Descripción</span>
+                  <textarea
+                    value={gameForm.description}
+                    onChange={(e) => setGameForm(prev => ({ ...prev, description: e.target.value }))}
+                  />
+                </label>
+                <button className="btn btn--primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Creando…' : 'Crear juego'}
+                </button>
+              </form>
             </section>
-          )}
-        </div>
-      )}
+
+            <section className="panel panel--scrollable">
+              <h2 className="panel__title">Juegos disponibles</h2>
+              <div className="panel__content">
+                <ul className="list">
+                  {games.map(game => (
+                    <li key={game.id} className="list-item">
+                      <h3>{game.name}</h3>
+                      {game.description && <p>{game.description}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'items' && (
+          <div className="content-grid">
+            <section className="panel">
+              <h2 className="panel__title">Agregar nuevo item</h2>
+              <form className="form" onSubmit={handleCreateItem}>
+                <label className="form-field">
+                  <span>Nombre</span>
+                  <input
+                    type="text"
+                    value={itemForm.name}
+                    onChange={(e) => setItemForm(prev => ({ ...prev, name: e.target.value }))}
+                    required
+                  />
+                </label>
+                <label className="form-field">
+                  <span>Descripción</span>
+                  <textarea
+                    value={itemForm.description}
+                    onChange={(e) => setItemForm(prev => ({ ...prev, description: e.target.value }))}
+                  />
+                </label>
+                <label className="form-field">
+                  <span>URL de imagen</span>
+                  <input
+                    type="url"
+                    value={itemForm.imageUrl}
+                    onChange={(e) => setItemForm(prev => ({ ...prev, imageUrl: e.target.value }))}
+                  />
+                </label>
+                <button className="btn btn--primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Creando…' : 'Crear item'}
+                </button>
+              </form>
+            </section>
+
+            <section className="panel panel--scrollable">
+              <h2 className="panel__title">Items disponibles</h2>
+              <div className="panel__content">
+                <ul className="list">
+                  {items.map(item => (
+                    <li key={item.id} className="list-item">
+                      <h3>{item.name}</h3>
+                      {item.description && <p>{item.description}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          </div>
+        )}
+
+
+        {activeTab === 'tierlists' && (
+          <div className="content-grid--single">
+            <section className="panel">
+              <h2 className="panel__title">Crear nueva tier list</h2>
+              <form className="form form--inline" onSubmit={handleCreateTierList}>
+                <label className="form-field">
+                  <span>Título</span>
+                  <input
+                    type="text"
+                    value={tierListForm.title}
+                    onChange={(e) => setTierListForm(prev => ({ ...prev, title: e.target.value }))}
+                    required
+                  />
+                </label>
+                <label className="form-field">
+                  <span>Descripción</span>
+                  <textarea
+                    value={tierListForm.description}
+                    onChange={(e) => setTierListForm(prev => ({ ...prev, description: e.target.value }))}
+                  />
+                </label>
+                <label className="form-field">
+                  <span>Juego</span>
+                  <select
+                    value={tierListForm.gameId}
+                    onChange={(e) => setTierListForm(prev => ({ ...prev, gameId: e.target.value }))}
+                    required
+                  >
+                    <option value="">Seleccionar juego</option>
+                    {games.map(game => (
+                      <option key={game.id} value={game.id}>{game.name}</option>
+                    ))}
+                  </select>
+                </label>
+                <button className="btn btn--primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Creando…' : 'Crear tier list'}
+                </button>
+              </form>
+            </section>
+
+            <section className="panel panel--scrollable">
+              <h2 className="panel__title">Tier Lists disponibles</h2>
+              <div className="panel__content">
+                <ul className="list list--grid">
+                  {tierLists.map(tierList => (
+                    <li key={tierList.id} className="list-item">
+                      <h3>{tierList.title}</h3>
+                      {tierList.description && <p>{tierList.description}</p>}
+                      <button
+                        className="btn btn--secondary btn--small"
+                        onClick={() => selectTierList(tierList)}
+                      >
+                        Ver tier list
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+
+            {selectedTierList && (
+              <section className="panel panel--highlight">
+                <h2 className="panel__title">📊 {selectedTierList.title}</h2>
+                {selectedTierList.description && (
+                  <p style={{ marginTop: '-0.5rem', marginBottom: '1rem', color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.875rem' }}>
+                    {selectedTierList.description}
+                  </p>
+                )}
+                <section className="panel">
+                  <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>➕ Agregar item a esta tier list</h3>
+                  <form className="form form--inline" onSubmit={handleAddItemToTierList}>
+                    <label className="form-field">
+                      <span>Seleccionar item</span>
+                      <select
+                        value={addItemForm.itemId}
+                        onChange={(e) => setAddItemForm(prev => ({ ...prev, itemId: e.target.value }))}
+                        required
+                      >
+                        <option value="">Seleccionar item</option>
+                        {items.map(item => (
+                          <option key={item.id} value={item.id}>{item.name}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="form-field">
+                      <span>Rank</span>
+                      <select
+                        value={addItemForm.rank}
+                        onChange={(e) => setAddItemForm(prev => ({ ...prev, rank: e.target.value as TierRank }))}
+                        required
+                      >
+                        {RANK_ORDER.map(rank => (
+                          <option key={rank} value={rank}>{rank}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <button className="btn btn--primary btn--small" type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? 'Agregando…' : 'Agregar item'}
+                    </button>
+                  </form>
+                </section>
+                {status === 'loading' && <p className="status status--loading">Cargando...</p>}
+                {status === 'error' && error && (
+                  <p className="status status--error">Error: {error}</p>
+                )}
+                {status === 'success' && (
+                  <div className="tier-grid">
+                    {groupedTierListItems.map(({ rank, items: rankItems }) => (
+                      <article key={rank} className="tier-column">
+                        <div className={`tier-header rank-${rank}`}>
+                          <span>{rank}</span>
+                        </div>
+                        <ul className="tier-items">
+                          {rankItems.length === 0 ? (
+                            <li className="tier-item tier-item--empty">Sin elementos en esta categoría.</li>
+                          ) : (
+                            rankItems.map((tierListItem) => (
+                              <li key={tierListItem.id} className="tier-item">
+                                <div>
+                                  <h3 className="tier-item__name">{tierListItem.item?.name}</h3>
+                                  {tierListItem.item?.description && (
+                                    <p className="tier-item__description">{tierListItem.item.description}</p>
+                                  )}
+                                </div>
+                              </li>
+                            ))
+                          )}
+                        </ul>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
